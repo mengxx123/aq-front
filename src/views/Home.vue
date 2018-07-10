@@ -1,5 +1,8 @@
 <template>
     <my-page title="首页">
+        <div class="ui-loading" v-if="loading">
+            <ui-circular-progress :size="24"/>
+        </div>
         <div class="question-box" v-if="question">
             <div class="title">
                 <ui-icon class="icon" value="help" />
@@ -23,7 +26,8 @@
     export default {
         data () {
             return {
-                dataPage: 2,
+                loading: false,
+                dataPage: 0,
                 questionIndex: -1,
                 question: null,
                 userAnswer: -1,
@@ -42,18 +46,26 @@
         computed: {
         },
         mounted() {
-            this.$http.get(`/aqs?page=${this.dataPage}`).then(
-                response => {
-                    let data = response.data
-                    console.log(data)
-                    this.questions = data
-                    this.nextQuestion()
-                },
-                response => {
-                    console.log(response)
-                })
+            this.loadData()
         },
         methods: {
+            loadData() {
+                this.dataPage++
+                this.loading = true
+                this.$http.get(`/aqs?page=${this.dataPage}`).then(
+                    response => {
+                        let data = response.data
+                        console.log(data)
+                        this.questions = data
+                        this.questionIndex = -1
+                        this.nextQuestion()
+                        this.loading = false
+                    },
+                    response => {
+                        console.log(response)
+                        this.loading = false
+                    })
+            },
             selectOption(index) {
                 this.userAnswer = index
                 if (index === this.question.answer - 1) {
@@ -65,6 +77,10 @@
             nextQuestion() {
                 this.userAnswer = -1
                 this.questionIndex++
+                if (this.questionIndex === 20) {
+                    this.loadData()
+                    return
+                }
                 this.question = this.questions[this.questionIndex]
                 this.question.options = JSON.parse(this.question.list).filter(item => item)
             },
