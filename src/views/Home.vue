@@ -1,23 +1,25 @@
 <template>
-    <my-page title="首页">
-        <div class="ui-loading" v-if="loading">
-            <ui-circular-progress :size="24"/>
-        </div>
-        <div class="question-box" v-if="question">
-            <div class="title">
-                <ui-icon class="icon" value="help" />
-                {{ question.title }}</div>
-            <ul class="option-list">
-                <li class="item" :class="itemClass(index)" @click="selectOption(index)" v-for="item, index in question.options">
-                    <div class="index">{{ indexText(index) }}</div>
-                    <div class="text">{{ item }}</div>
-                </li>
-            </ul>
-            <div class="btns">
-                <ui-raised-button class="btn" label="查看答案" @click="viewAnswer" />
-                <ui-raised-button class="btn" label="下一题" @click="nextQuestion" />
+    <my-page title="趣味知识问答">
+        <div class="common-container container">
+            <div class="ui-loading" v-if="loading">
+                <ui-circular-progress :size="24"/>
             </div>
-            <!-- <div>{{ question.answer }}</div> -->
+            <div class="question-box" v-if="question">
+                <div class="title">
+                    <ui-icon class="icon" value="help" />
+                    {{ question.title }}</div>
+                <ul class="option-list">
+                    <li class="item" :class="itemClass(index)" @click="selectOption(index)" v-for="item, index in question.options">
+                        <div class="index">{{ indexText(index) }}</div>
+                        <div class="text">{{ item }}</div>
+                    </li>
+                </ul>
+                <div class="btns">
+                    <ui-raised-button class="btn" label="查看答案" @click="viewAnswer" />
+                    <ui-raised-button class="btn" label="下一题" @click="nextQuestion" />
+                </div>
+                <!-- <div>{{ question.answer }}</div> -->
+            </div>
         </div>
     </my-page>
 </template>
